@@ -1,30 +1,28 @@
-# React + TypeScript + Vite
+# DOCUMENTAÇÃO
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Introdução
+A presente documentação tem por objetivo realizar a descrição do projeto front-end do desafio técnico da Hubbe e disponibilizar as devidas instruções para executá-lo.
 
-Currently, two official plugins are available:
+## Descrição do Projeto
+O projeto tem por objetivo disponibilizar uma aplicação, onde determinada tela permite o acesso de apenas 1 usuário por vez. Para isso, no front-end foi criado uma landing page e a tela segura. A landing page possui um botão que faz o redirecionamento à tela segura, mas a tela segura também pode ser acessada pela rota **/safe**.\
+Ao acessar a rota **/safe**, o front-end faz uma solicitação à API para verificar a disponibilidade da página. O conteúdo principal da página é renderizada somente após a verificação e permissão da API, onde em casos de acesso negado, o usuário é redirecionado à landing page.\
+Enquanto o usuário está na tela segura, é feita uma solicitação à API a cada minuto, mantendo a sessão sempre atualizada, para devidas validações por parte do back-end, caso o usuário saia da página de forma inesperada, evitando assim que a tela fique indisponível.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tecnologias
+Para o front-end foi utilizado TypeScript como linguagem de programação, React para criação da interface do usuário e Axios para cliente HTTP. Para a implementação de um teste, foi utilizado o Jest e React Testing Library. Também foi utilizado o React Query para gestão dos dados solicitados à API.
 
-## Expanding the ESLint configuration
+## Pré-requisitos
+Necessário utilizar uma versão do **node.js** acima de 20.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Configurações
+Para iniciar o projeto, é necessário seguir as seguintes etapas:
 
-- Configure the top-level `parserOptions` property like this:
+1. Dentro da pasta do projeto, renomear o arquivo **.env.example** para **.env**;
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+2. Caso a porta do servidor for alterada no back-end, será necessário alterar a variável **VITE_API_URL** dentro do **.env**;
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+3. Através de um terminal, acessar a pasta do projeto e executar o comando **yarn install** ou **npm install**;
+
+## Execução
+Através de um terminal, acessar a pasta do projeto e executar o comando **yarn start** ou **npm start**.
+

@@ -1,9 +1,8 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { IoReturnDownBackSharp, IoLogoReact, IoLogoNodejs } from 'react-icons/io5'
 import { TbBrandTypescript } from 'react-icons/tb'
 import { useTheme } from 'styled-components'
-import { useMutation } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 
 import api from '~/services/api'
@@ -14,70 +13,65 @@ import { Button, Loading } from '~/components'
 
 import { Container, Card } from './styles'
 
+interface IUser {
+  token?: string
+}
+
 export default function Safe() {
   const { colors } = useTheme()
   const navigate = useNavigate()
   const { addToast } = useToast()
+  const [user, setUser] = useState<IUser>()
+  const [permGranted, setPermGranted] = useState(false)
 
-  const { mutateAsync: onAccess, isLoading } = useMutation(
-    async () => {
-      console.log('Teste 2')
-      return api.post('/users').then((response) => response.data)
-    },
-    {
-      onError: (error: any) => {
-        console.log('Teste 3')
+  const onValidate = useCallback(
+    async (data: IUser | undefined) => {
+      try {
+        console.log('Teste 2.1')
+        console.log(data)
+        await api.post('/users', data).then((response) => {
+          console.log('Teste 2.2')
+          console.log(response.data)
+          setUser(response.data)
+          setPermGranted(true)
+        })
+      } catch (error: any) {
+        console.log('Teste 2.3')
         if (error instanceof AxiosError) {
-          return addToast({
+          console.log('Teste 2.4')
+          addToast({
             type: 'error',
             title: 'Página indisponível!',
             description: error.response?.data.message,
           })
         }
 
+        console.log('Teste 2.5')
         navigate('/', { replace: true })
-      },
-      onSuccess: () => {
-        console.log('Teste 4')
-        return navigate('/safe')
-      },
-      onSettled: async () => {
-        await queryClient.invalidateQueries(['users'])
-      },
-      retry: 3,
+      }
     },
+    [addToast],
   )
 
   useEffect(() => {
-    console.log('Teste 1')
-    onAccess()
-  }, [onAccess])
+    console.log('Teste 3.1')
+    const interval = setInterval(() => {
+      if (permGranted) {
+        onValidate(user)
+      }
+    }, 60000);
+
+    return () => clearInterval(interval)
+  }, [onValidate, user])
+
+  useEffect(() => {
+    console.log('Teste 2.1')
+    onValidate(undefined)
+  }, [onValidate])
 
   return (
     <Container>
-      {isLoading ? (
-        <div
-          style={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            marginTop: 200,
-          }}
-        >
-          <Loading loading size="lg" color={colors.primary} />
-
-          <div
-            style={{
-              marginTop: 20,
-              color: colors.white,
-              fontSize: 25,
-            }}
-          >
-            Validando
-          </div>
-        </div>
-      ) : (
+      {permGranted ? (
         <>
           <div style={{ margin: '40px 0 0 40px' }}>
             <img
@@ -127,6 +121,28 @@ export default function Safe() {
             </div>
           </div>
         </>
+      ) : (
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginTop: 200,
+          }}
+        >
+          <Loading loading size="lg" color={colors.primary} />
+
+          <div
+            style={{
+              marginTop: 20,
+              color: colors.white,
+              fontSize: 25,
+            }}
+          >
+            Validando
+          </div>
+        </div>
       )}
     </Container>
   )

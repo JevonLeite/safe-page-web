@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom'
 import { FaLock } from 'react-icons/fa'
 import { useTheme } from 'styled-components'
 
@@ -7,6 +8,7 @@ import { Container } from './styles'
 
 export default function Landing() {
   const { colors } = useTheme()
+  const navigate = useNavigate()
 
   return (
     <Container>
@@ -42,7 +44,7 @@ export default function Landing() {
             textAlign: 'center'
           }}
         >
-          Desenvolver uma aplicação Web onde apenas uma pessoa por vez é capaz de acessar a tela segura. Teste você mesmo:
+          Desenvolver uma aplicação web onde apenas uma pessoa por vez é capaz de acessar a tela segura. Teste você mesmo:
         </div>
 
 
@@ -51,6 +53,7 @@ export default function Landing() {
             text='Acessar Tela Segura'
             icon={FaLock}
             style={{ width: 300, height: 60 }}
+            onClick={() => navigate('/safe')}
           />
         </div>
       </div>

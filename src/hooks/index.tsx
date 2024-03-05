@@ -1,5 +1,6 @@
 import { ReactNode } from 'react'
 
+import { AccessProvider } from './access'
 import { ToastProvider } from './toast'
 
 interface IAppProviderProps {
@@ -7,5 +8,9 @@ interface IAppProviderProps {
 }
 
 export default function AppProvider({ children }: IAppProviderProps) {
-  return <ToastProvider>{children}</ToastProvider>
+  return (
+    <AccessProvider>
+      <ToastProvider>{children}</ToastProvider>
+    </AccessProvider>
+  )
 }

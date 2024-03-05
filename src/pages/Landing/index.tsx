@@ -1,6 +1,9 @@
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaLock } from 'react-icons/fa'
 import { useTheme } from 'styled-components'
+
+import { useAccess } from '~/hooks/access'
 
 import { Button } from '~/components'
 
@@ -9,6 +12,13 @@ import { Container } from './styles'
 export default function Landing() {
   const { colors } = useTheme()
   const navigate = useNavigate()
+  const { user, removeUser } = useAccess()
+
+  useEffect(() => {
+    if (user) {
+      removeUser(user)
+    }
+  }, [removeUser, user])
 
   return (
     <Container>
@@ -52,7 +62,7 @@ export default function Landing() {
             text="Acessar Tela Segura"
             icon={FaLock}
             style={{ width: 300, height: 60 }}
-            onClick={() => navigate('/safe', { replace: true })}
+            onClick={() => navigate('/safe')}
           />
         </div>
       </div>

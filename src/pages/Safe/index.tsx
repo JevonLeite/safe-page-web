@@ -10,6 +10,7 @@ import { useTheme } from 'styled-components'
 import { AxiosError } from 'axios'
 
 import api from '~/services/api'
+import { useAccess } from '~/hooks/access'
 import { useToast } from '~/hooks/toast'
 
 import { Button, Loading } from '~/components'
@@ -23,17 +24,15 @@ interface IUser {
 export default function Safe() {
   const { colors } = useTheme()
   const navigate = useNavigate()
+  const { user, addUser, removeUser } = useAccess()
   const { addToast } = useToast()
-  const [user, setUser] = useState<IUser>()
   const [permGranted, setPermGranted] = useState(false)
-  const [closing, setClosing] = useState(false)
 
   const onValidate = useCallback(
     async (data: IUser | undefined) => {
       try {
         await api.post('/users', data).then((response) => {
-          console.log('Teste 2')
-          setUser(response.data)
+          addUser(response.data)
           setPermGranted(true)
         })
       } catch (error: any) {
@@ -48,11 +47,10 @@ export default function Safe() {
         navigate('/', { replace: true })
       }
     },
-    [addToast, navigate],
+    [addUser, addToast, navigate],
   )
 
   useEffect(() => {
-    console.log('Teste 3')
     const interval = setInterval(() => {
       if (permGranted) {
         onValidate(user)
@@ -63,28 +61,13 @@ export default function Safe() {
   }, [onValidate, permGranted, user])
 
   useEffect(() => {
-    console.log('Teste 1')
     onValidate(undefined)
   }, [onValidate])
 
-  useEffect(() => {
-    console.log('Teste 6')
-    if (closing && user && user.token) {
-      console.log('Teste 6.1')
-      api.delete(`/users/${user.token}`)
-    }
-  }, [closing, user])
-
-  useEffect(() => {
-    return () => {
-      console.log('Teste 4')
-      setClosing(true)
-    }
-  }, [])
-
   window.addEventListener('beforeunload', () => {
-    console.log('Teste 5')
-    setClosing(true)
+    if (user) {
+      removeUser(user)
+    }
   })
 
   return (

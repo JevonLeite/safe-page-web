@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { IoReturnDownBackSharp, IoLogoReact, IoLogoNodejs } from 'react-icons/io5'
+import {
+  IoReturnDownBackSharp,
+  IoLogoReact,
+  IoLogoNodejs,
+} from 'react-icons/io5'
 import { TbBrandTypescript } from 'react-icons/tb'
 import { useTheme } from 'styled-components'
 import { AxiosError } from 'axios'
 
 import api from '~/services/api'
 import { useToast } from '~/hooks/toast'
-import queryClient from '~/services/query'
 
 import { Button, Loading } from '~/components'
 
@@ -23,22 +26,18 @@ export default function Safe() {
   const { addToast } = useToast()
   const [user, setUser] = useState<IUser>()
   const [permGranted, setPermGranted] = useState(false)
+  const [closing, setClosing] = useState(false)
 
   const onValidate = useCallback(
     async (data: IUser | undefined) => {
       try {
-        console.log('Teste 2.1')
-        console.log(data)
         await api.post('/users', data).then((response) => {
-          console.log('Teste 2.2')
-          console.log(response.data)
+          console.log('Teste 2')
           setUser(response.data)
           setPermGranted(true)
         })
       } catch (error: any) {
-        console.log('Teste 2.3')
         if (error instanceof AxiosError) {
-          console.log('Teste 2.4')
           addToast({
             type: 'error',
             title: 'Página indisponível!',
@@ -46,28 +45,47 @@ export default function Safe() {
           })
         }
 
-        console.log('Teste 2.5')
         navigate('/', { replace: true })
       }
     },
-    [addToast],
+    [addToast, navigate],
   )
 
   useEffect(() => {
-    console.log('Teste 3.1')
+    console.log('Teste 3')
     const interval = setInterval(() => {
       if (permGranted) {
         onValidate(user)
       }
-    }, 60000);
+    }, 60000)
 
     return () => clearInterval(interval)
-  }, [onValidate, user])
+  }, [onValidate, permGranted, user])
 
   useEffect(() => {
-    console.log('Teste 2.1')
+    console.log('Teste 1')
     onValidate(undefined)
   }, [onValidate])
+
+  useEffect(() => {
+    console.log('Teste 6')
+    if (closing && user && user.token) {
+      console.log('Teste 6.1')
+      api.delete(`/users/${user.token}`)
+    }
+  }, [closing, user])
+
+  useEffect(() => {
+    return () => {
+      console.log('Teste 4')
+      setClosing(true)
+    }
+  }, [])
+
+  window.addEventListener('beforeunload', () => {
+    console.log('Teste 5')
+    setClosing(true)
+  })
 
   return (
     <Container>
@@ -77,6 +95,7 @@ export default function Safe() {
             <img
               src="https://hubbe.app/wp-content/uploads/2023/09/logo-hubbe-digital-2.png"
               width="300"
+              alt="logo"
             />
           </div>
 
@@ -88,7 +107,6 @@ export default function Safe() {
               alignItems: 'center',
             }}
           >
-
             <div style={{ color: colors.white, fontSize: 35 }}>
               BEM-VINDO À TELA SEGURA
             </div>
@@ -97,7 +115,13 @@ export default function Safe() {
               TECH STACK UTILIZADO
             </div>
 
-            <div style={{ marginTop: 30, display: 'flex', justifyContent: 'center' }}>
+            <div
+              style={{
+                marginTop: 30,
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
               <Card>
                 <TbBrandTypescript size={80} />
               </Card>
@@ -113,7 +137,7 @@ export default function Safe() {
 
             <div style={{ marginTop: 60 }}>
               <Button
-                text='Voltar'
+                text="Voltar"
                 icon={IoReturnDownBackSharp}
                 style={{ width: 200, height: 60 }}
                 onClick={() => navigate('/', { replace: true })}

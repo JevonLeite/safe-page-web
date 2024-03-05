@@ -9,7 +9,7 @@ Ao acessar a rota **/safe**, o front-end faz uma solicitação à API para verif
 Enquanto o usuário está na tela segura, é feita uma solicitação à API a cada minuto, mantendo a sessão sempre atualizada, para devidas validações por parte do back-end, caso o usuário saia da página de forma inesperada, evitando assim que a tela fique indisponível.
 
 ## Tecnologias
-Para o front-end foi utilizado TypeScript como linguagem de programação, React para criação da interface do usuário e Axios para cliente HTTP. Para a implementação de um teste, foi utilizado o Jest e React Testing Library. Também foi utilizado o React Query para gestão dos dados solicitados à API.
+Para o front-end foi utilizado TypeScript como linguagem de programação, React para criação da interface do usuário e Axios para cliente HTTP. Também foi utilizado o Jest e React Testing Library para a implementação de um teste.
 
 ## Pré-requisitos
 Necessário utilizar uma versão do **node.js** acima de 20.

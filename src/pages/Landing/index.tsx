@@ -16,6 +16,7 @@ export default function Landing() {
         <img
           src="https://hubbe.app/wp-content/uploads/2023/09/logo-hubbe-digital-2.png"
           width="300"
+          alt="logo"
         />
       </div>
 
@@ -27,9 +28,7 @@ export default function Landing() {
           alignItems: 'center',
         }}
       >
-        <div style={{ color: colors.white, fontSize: 35 }}>
-          DESAFIO TÉCNICO
-        </div>
+        <div style={{ color: colors.white, fontSize: 35 }}>DESAFIO TÉCNICO</div>
 
         <div style={{ marginTop: 30, color: colors.white, fontSize: 30 }}>
           Objetivo
@@ -41,19 +40,19 @@ export default function Landing() {
             marginTop: 30,
             color: colors.gray,
             fontSize: 20,
-            textAlign: 'center'
+            textAlign: 'center',
           }}
         >
-          Desenvolver uma aplicação web onde apenas uma pessoa por vez é capaz de acessar a tela segura. Teste você mesmo:
+          Desenvolver uma aplicação web onde apenas uma pessoa por vez é capaz
+          de acessar a tela segura. Teste você mesmo:
         </div>
-
 
         <div style={{ marginTop: 60 }}>
           <Button
-            text='Acessar Tela Segura'
+            text="Acessar Tela Segura"
             icon={FaLock}
             style={{ width: 300, height: 60 }}
-            onClick={() => navigate('/safe')}
+            onClick={() => navigate('/safe', { replace: true })}
           />
         </div>
       </div>

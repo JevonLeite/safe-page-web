@@ -74,7 +74,10 @@ export default function Safe() {
     <Container>
       {permGranted ? (
         <>
-          <div style={{ margin: '40px 0 0 40px' }}>
+          <div
+            data-testid="perm-content"
+            style={{ margin: '40px 0 0 40px' }}
+          >
             <img
               src="https://hubbe.app/wp-content/uploads/2023/09/logo-hubbe-digital-2.png"
               width="300"
@@ -130,6 +133,7 @@ export default function Safe() {
         </>
       ) : (
         <div
+          data-testid="no-perm-content"
           style={{
             width: '100%',
             display: 'flex',
